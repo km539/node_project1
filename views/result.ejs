@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/style.css">
+    <title>Multiple Choise Quiz</title>
+    <script src="https://kit.fontawesome.com/1325c2723b.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="result">
+        <div class="resultStatus">
+            <h3>Your today's result are here:</h3>
+            <h1><%= userResult.status %></h1>
+
+            <hr class="brakeline">
+            <div class="resultScore">
+                <h2>Score : <%= userResult.score %></h2>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> <%= userResult.correctAns %> / <%= userResult.totalAns %></li>
+                    <li class="border">|</li>
+                    <li><i class="fas fa-times-circle"></i> <%= userResult.wrongAns %> / <%= userResult.totalAns %></li>
+                </ul>
+            </div>
+            <hr class="brakeline">
+            <div class="resultTime">
+                <h2>Time : <%= userResult.ans %> secs</h2>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

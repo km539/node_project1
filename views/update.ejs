@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/style.css">
+    <title>Multiple Choise Quiz</title>
+</head>
+
+<body>
+    <div class="update">
+        <h1>質問の更新</h1>
+        <form action="<%=`/admin/${tablename}/${selected.id}`%>" method="post">
+            <div class="formGroup">
+                <label for="qContent">質問内容</label>
+                <textarea name="qContent" cols="30" rows="3"><%= selected.question %></textarea>
+            </div>
+            <div class="formGroup">
+                <label for="qChoice1">選択肢１</label>
+                <input type="text" name="qChoice1" value="<%=`${selected.choice1}`%>">
+            </div>
+            <div class="formGroup">
+                <label for="qChoice2">選択肢２</label>
+                <input type="text" name="qChoice2" value="<%=`${selected.choice2}`%>">
+            </div>
+            <div class="formGroup">
+                <label for="qChoice3">選択肢３</label>
+                <input type="text" name="qChoice3" value="<%=`${selected.choice3}`%>">
+            </div>
+            <div class="formGroup">
+                <label for="qChoice4">選択肢４</label>
+                <input type="text" name="qChoice4" value="<%=`${selected.choice4}`%>">
+            </div>
+            <div class="formGroup">
+                <label for="qAnswer">答え</label>
+                <input type="text" name="qAnswer" value="<%=`${selected.answer}`%>">
+            </div>
+            <p class="error">記入いただいた情報が正しくありません。</p>
+            <button type="submit">更新する</button>
+        </form>
+    </div>
+</body>
+
+</html>

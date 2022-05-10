@@ -1,0 +1,481 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background-color: #83c783;
+}
+
+/* header */
+nav {
+    padding: 2% 4%;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+}
+
+nav h1 {
+    margin-top: 0;
+}
+
+nav h1 a {
+    font-size: 26px !important;
+}
+
+nav ul {
+    display: flex;
+}
+
+nav ul li {
+    list-style: none;
+    display: inline-block;
+    padding: 8px 12px;
+    position: relative;
+}
+
+nav ul li a,
+nav h1 a {
+    font-size: 20px;
+    text-decoration: none;
+    color: #031142;
+    transition: 0.5s;
+}
+
+nav ul li a:hover,
+nav h1 a:hover {
+    color: #BABEBD;
+}
+
+.quizTable {
+    font-size: 20px;
+}
+
+.quizTable:hover .dropdownMenu {
+    display: block;
+}
+
+.dropdownMenu {
+    display: none;
+    z-index: 1;
+}
+
+.dropdownMenu li {
+    display: block;
+    padding: 5px 5px 0px 5px;
+}
+
+/* feedback */
+.btn {
+    font-size: 25px;
+    padding: 5px 10px;
+    background-color: inherit;
+    border: 3px solid #fff;
+    cursor: pointer;
+    color: #fff;
+    border-radius: 10px;
+    margin: 20px auto 0 auto;
+}
+
+.btn:hover {
+    background: #fff;
+    box-shadow: 0px 2px 10px 5px #1abc9c;
+    color: #000;
+    opacity: 0.6;
+}
+
+#submitBtn {
+    display: none;
+}
+
+#nextQuiz {
+    display: none;
+}
+
+.title {
+    text-align: center;
+}
+
+.title h1 {
+    color: #fff;
+    font-size: 50px;
+}
+
+.circle {
+    position: absolute;
+    left: 5%;
+    top: 10%;
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+    border: 16px solid transparent;
+    border-top: 16px solid #000;
+    animation: spin 15s linear infinite;
+    opacity: 0.6;
+    visibility: hidden;
+}
+
+.displayTime {
+    font-size: 60px;
+    opacity: 0.6;
+    position: absolute;
+    left: 5%;
+    top: 15%;
+    width: 150px;
+    height: 150px;
+    text-align: center;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#form {
+    margin-top: 3%;
+}
+
+#questionBox {
+    width: 60%;
+    margin: 0 auto 20px auto;
+}
+
+#question {
+    font-size: 30px;
+    color: #fff;
+    text-align: center;
+    padding: 10px 20px;
+}
+
+#questions #radioBox {
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    width: 40%;
+    margin: 10px auto;
+}
+
+#questions #radioBox>input {
+    width: 100%;
+    height: 100%;
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 4px 8px;
+    font-size: 18px;
+}
+
+#questions #radioBox>input:checked {
+    background-image: linear-gradient(180deg, #95d891, #74bbad);
+    /*background-color: #83c783;*/
+    color: #fff;
+}
+
+#questions #radioBox>input:before {
+    content: attr(label);
+    /* attr() return the value of input label*/
+    display: inline-block;
+    /*allows to set a width and height on the element*/
+    width: 100%;
+}
+
+/* result page design */
+.result {
+    width: 70%;
+    margin: 10% auto 0 auto;
+}
+
+.resultStatus {
+    border: 5px solid #fff;
+    background-color: #fff;
+    opacity: 0.5;
+    border-radius: 15px;
+    padding: 10px 20px;
+}
+
+.resultStatus h1 {
+    font-size: 100px;
+    text-align: center;
+    color: #32CD32;
+}
+
+.brakeline {
+    width: 90%;
+    height: 2px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #aaa;
+}
+
+.resultScore,
+.resultTime {
+    margin: 5px auto;
+    text-align: center;
+}
+
+.resultScore ul li {
+    display: inline;
+    list-style-type: none;
+    margin: 0 5px;
+}
+
+.resultScore .border {
+    color: #aaa;
+    margin: 0;
+}
+
+.fa-check-circle {
+    color: #32CD32;
+}
+
+.fa-times-circle {
+    color: #FF5192;
+}
+
+/* table page design */
+
+h1 {
+    text-align: center;
+    margin-top: 15px;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 90%;
+    background-color: #fff;
+    margin: 20px auto;
+}
+
+td,
+th {
+    text-align: left;
+    padding: 8px;
+}
+
+.quesionBody {
+    width: 325px;
+}
+
+.action {
+    width: 150px;
+}
+
+tr:nth-child(even) {
+    background-color: #f8f6ff;
+}
+
+table .head {
+    background-color: #004882;
+    color: #fff;
+}
+
+.btnAction {
+    padding: 2px 4px;
+    text-decoration: none;
+    background: #83c783;
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 5px;
+}
+
+.btnAction:hover {
+    opacity: 0.5;
+}
+
+/* login and sign up form page */
+.loginBox {
+    text-align: center;
+    width: 40%;
+    margin-top: 10%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.loginForm .error {
+    margin-top: 5px;
+    color: #BC2020;
+    /*visibility: hidden;*/
+}
+
+.loginForm>input {
+    display: block;
+    margin-top: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 10px;
+    height: 40px;
+    width: 350px;
+    border-radius: 3px;
+    font-size: 18px;
+    border: 2px solid #aaa;
+}
+
+.loginForm>input:focus {
+    outline: none;
+    border: 2px solid #03A6A8;
+}
+
+.loginForm>button {
+    margin-top: 15px;
+    margin-bottom: 10px;
+    background-color: #08FFEF;
+    color: #fff;
+    height: 40px;
+    width: 360px;
+    border-radius: 3px;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.loginForm button:hover {
+    opacity: 0.6;
+}
+
+.pwMessage {
+    padding-top: 10px;
+    font-size: 16px;
+}
+
+hr {
+    background-color: #aaa;
+    width: 360px;
+    margin: 10px auto 10px auto;
+}
+
+/* admin page */
+.postQuestion {
+    width: 100%;
+}
+
+.postQuestionForm {
+    margin: 20px auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 60%;
+    background-color: #fff;
+}
+
+.postQuestionForm>input,
+.postQuestionForm>select,
+.postQuestionForm>button {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+}
+
+.qusestionElement {
+    padding: 3px 0 2px 7px;
+    margin-top: 5px;
+    height: 30px;
+    font-size: 22px;
+    border: none;
+    border-bottom: 2px solid rgba(19, 19, 21, 0.6);
+    background-color: inherit;
+}
+
+.questionBtn {
+    color: #fff;
+    background-color: #004882;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    font-size: 22px;
+}
+
+.questionBtn:hover {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.qusestionSelect {
+    background-color: inherit;
+    border: 2px solid rgba(19, 19, 21, 0.6);
+    font-size: 20px;
+    height: 35px;
+    padding: 5px 0 5px 7px;
+}
+
+::placeholder {
+    color: #000;
+}
+
+.qusestionElement:focus {
+    outline: none;
+    border: 2px solid #03A6A8;
+}
+
+/* updata page */
+.update {
+    width: 40%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.formGroup label,
+.formGroup input {
+    display: block;
+}
+
+.formGroup {
+    margin-top: 10px;
+}
+
+
+.update form .error {
+    margin-top: 5px;
+    color: #BC2020;
+    visibility: hidden;
+}
+
+.formGroup>input,
+.formGroup>textarea {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 10px;
+    height: 40px;
+    width: 500px;
+    border-radius: 3px;
+    font-size: 18px;
+    border: 2px solid #aaa;
+}
+
+.formGroup>textarea {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    height: auto !important;
+}
+
+.formGroup>input:focus,
+.formGroup>textarea:focus {
+    outline: none;
+    border: 2px solid #03A6A8;
+}
+
+.update form button {
+    margin-top: 10px;
+    margin-right: auto;
+    margin-left: auto;
+    background-color: #08FFEF;
+    color: #fff;
+    height: 40px;
+    width: 150px;
+    border-radius: 3px;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.update form button:hover {
+    opacity: 0.6;
+}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/style.css">
+    <title>Multiple Choise Quiz</title>
+</head>
+
+<body>
+    <div class="update">
+        <h1>ユーザー情報の更新</h1>
+        <form action="<%=`/admin/users/${username}`%>" method="post">
+            <div class="formGroup">
+                <label for="username">名前</label>
+                <input type="text" name="username">
+            </div>
+            <div class="formGroup">
+                <select id="topic" name="status" class="qusestionSelect">
+                    <option value="" disabled selected >権限</option>
+                    <option value="user">user</option>
+                    <option value="admin">admin</option>
+                </select>
+            </div>
+            <p class="error">記入いただいた情報が正しくありません。</p>
+            <button type="submit">更新する</button>
+        </form>
+    </div>
+</body>
+
+</html>
