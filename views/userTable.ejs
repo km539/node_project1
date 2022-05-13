@@ -13,7 +13,7 @@
         <h1>ユーザー情報</h1>
         <table>
             <tr class="head">
-   
+
                 <th>名前</th>
                 <th>パスワード</th>
                 <th>番号</th>
@@ -21,32 +21,34 @@
             <tr>
                 <th><%= name.user_name %></th>
                 <th><%= name.user_pw %></th>
-                <th><%= name.user_id %></th>
+                <th><%= name.id %></th>
             </tr>
         </table>
 
 
     </div>
 
-    <div>
-        <h1>回答結果</h1>
-        <table>
-            <tr class="head">
-                <th>点数</th>
-                <th>合否</th>
-                <th>かかった時間(秒)</th>
-                <th>問題</th>
-            </tr>
-            <% userScores.forEach(function(userScore) { %>
-            <tr>
-                <th><%= userScore.score %></th>
-                <th><%= userScore.status %></th>
-                <th><%= userScore.taken_time %></th>
-                <th><%= userScore.category %></th>
-            </tr>
-            <% }); %>
-        </table>
-    </div>
+    <% if(userScores.length !== 0){ %>
+        <div>
+            <h1>回答結果</h1>
+            <table>
+                <tr class="head">
+                    <th>点数</th>
+                    <th>合否</th>
+                    <th>かかった時間(秒)</th>
+                    <th>問題</th>
+                </tr>
+                <% userScores.forEach(function(userScore) { %>
+                <tr>
+                    <th><%= userScore.score %></th>
+                    <th><%= userScore.status %></th>
+                    <th><%= userScore.taken_time %></th>
+                    <th><%= userScore.category_id %></th>
+                </tr>
+                <% }); %>
+            </table>
+        </div>
+    <% } %>
 </body>
 
 </html>

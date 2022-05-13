@@ -66,6 +66,7 @@ nav h1 a:hover {
 }
 
 /* feedback */
+.categoryBtn,
 .btn {
     font-size: 25px;
     padding: 5px 10px;
@@ -77,6 +78,7 @@ nav h1 a:hover {
     margin: 20px auto 0 auto;
 }
 
+.categoryBtn:hover,
 .btn:hover {
     background: #fff;
     box-shadow: 0px 2px 10px 5px #1abc9c;
@@ -260,11 +262,7 @@ th {
 }
 
 .quesionBody {
-    width: 325px;
-}
-
-.action {
-    width: 150px;
+    width: 500px;
 }
 
 tr:nth-child(even) {

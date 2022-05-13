@@ -13,28 +13,19 @@
         <h1>質問テーブル</h1>
         <table>
             <tr class="head">
-                <th>ID</th>
                 <th class="quesionBody">質問内容</th>
-                <th>答え</th>
                 <th>選択肢１</th>
                 <th>選択肢２</th>
                 <th>選択肢３</th>
                 <th>選択肢４</th>
-                <th class="action">アクション</th>
             </tr>
             <% tables.forEach(function(table) { %>
             <tr>
-                <th><%= table.id %></th>
                 <th class="quesionBody"><%= table.question %></th>
-                <th><%= table.answer %></th>
-                <th><%= table.choice1 %></th>
-                <th><%= table.choice2 %></th>
-                <th><%= table.choice3 %></th>
-                <th><%= table.choice4 %></th>
-                <th class="action">
-                    <a href="<%=`/admin/update/${tablename}/${table.id}`%>" class="btnAction">Update</a>
-                    <a href="<%=`/admin/delete/${tablename}/${table.id}`%>" class="btnAction">Delete</a>
-                </th>
+                <th><%= table.choice[0] %></th>
+                <th><%= table.choice[1] %></th>
+                <th><%= table.choice[2] %></th>
+                <th><%= table.choice[3] %></th>
             </tr>
             <% }); %>
         </table>

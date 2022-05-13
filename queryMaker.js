@@ -1,58 +1,55 @@
 const postgresDB = require('./postgres/connectDB');
 const bcrypt = require("bcrypt"); //for hashing password
 
-async function updateStartTime(username, category) {
-    const startTime = Date.now();
+function createUserIntoScores(uuid, category_id) {
+    const startTime = Date.now(); //開始時間
     const para = {
-        text: `update score set start_time = $1 
-        where user_name = $2 and category = $3`,
-        values: [startTime, username, category]
+        text: `insert into scores (start_time, user_id, category_id) values($1,$2,$3)`,
+        values: [startTime, uuid, category_id]
     }
-    //ユーザーテーブルの開始時間を更新
-    await postgresDB.getData(para);
-
-    return showQuestiontable(category);
+    return postgresDB.getData(para);
 }
 
-async function checkAnswer(category, username, userAnswers) {
-    const db = await showQuestiontable(category);
+function showSelectedQuiz(category_id) {
+    const para = `select id, question, choice, answer from questions where category_id = ${category_id} ORDER BY random()`;
+    return postgresDB.getData(para);
+}
 
-    const totalAns = db.length;
+async function checkAnswer(user_id, category, userAnswers) {
+
+    const totalAns = userAnswers.length;
     let correctAns = 0;
-    for (let i = 0; i < userAnswers.length; i++) {
+    for (let i = 0; i < totalAns; i++) {
         if (userAnswers[i] == 1) {
             correctAns++;
         }
     }
     const wrongAns = totalAns - correctAns;
-    const score = correctAns * (100 / totalAns); // 100/ 0
+    const score = Math.floor(correctAns * (100 / totalAns)); // 100/ 0
     const status = score >= 70 ? "PASS" : "FAIL";
 
-    //終わった時間と結果を更新
+    //終わった時間,合否と結果を更新
     const endTime = Date.now();
     const para = {
-        text: `update score set end_time = $1, score = $2 
-        where user_name = $3 and category = $4`,
-        values: [endTime, score, username, category]
+        text: `update scores set score = $1, status = $2, end_time = $3 where user_id = $4 and category_id = $5`,
+        values: [score, status, endTime, user_id, category]
     };
 
-    //ユーザーテーブルの終了時間を更新
+    //ユーザーテーブルを更新
     await postgresDB.getData(para);
 
     //かかった時間を計算するために開始時間と終了時間を取得
     const para1 = {
-        text: `select start_time, end_time from score 
-        where user_name = $1 and category = $2`,
-        values: [username, category]
+        text: `select * from scores where user_id = $1 and category_id = $2`,
+        values: [user_id, category]
     };
     const ansTime = await postgresDB.getData(para1);
     const ans = Math.floor((ansTime[0].end_time - ansTime[0].start_time) / 1000);
 
-    //かかった時間、合否を更新
+    //かかった時間を更新
     const para2 = {
-        text: `update score set taken_time = $1, status = $2
-        where user_name = $3 and category = $4`,
-        values: [ans, status, username, category]
+        text: `update scores set taken_time = $1 where user_id = $2 and category_id = $3`,
+        values: [ans, user_id, category]
     };
     await postgresDB.getData(para2);
 
@@ -66,32 +63,44 @@ async function checkAnswer(category, username, userAnswers) {
     };
 }
 
-function addQuestion(body) {
-    //auto increment based on primary key id
+function addQuestionByCategory(question,choices,ansNum,category_id) {
     const para = {
-        text: `insert into ${body.topic}(question, choice1, choice2, choice3, choice4, answer) values ($1,$2,$3,$4,$5,$6)`,
-        values: [body.question, body.choice1, body.choice2, body.choice3, body.choice4, body.answer]
+        text: `insert into questions(question, choice, answer, category_id)  values ($1,$2,$3,$4)`,
+        values: [question,choices,ansNum,category_id]
     }
     return postgresDB.getData(para);
 }
 
-function showQuestiontable(tablename) {
-    const para = `select * from ${tablename}`;
+function addNewCategory(category){
+   const para = `insert into categories(category_name) values ('${category}')`;
+   return postgresDB.getData(para);
+}
+
+function showQuestiontable(category) {
+    const para = `select * from questions where category_id = ${category}`;
     return postgresDB.getData(para);
 }
 
-function getUser(username) {
+function getUser(id) {
+    //if parametar value is uuid
+    if (id.length >= 10) {
+        const para = {
+            text: `select * from users where id = $1`,
+            values: [id]
+        }
+        return postgresDB.getData(para);
+    }
     const para = {
         text: `select * from users where user_name = $1`,
-        values: [username]
+        values: [id]
     }
     return postgresDB.getData(para);
 }
 
-function getUserScore(username) {
+function getUserScore(id) {
     const para = {
-        text: `select * from score where user_name = $1`,
-        values: [username]
+        text: `select * from scores where user_id = $1`,
+        values: [id]
     }
     return postgresDB.getData(para);
 }
@@ -109,11 +118,11 @@ async function addNewUser(newUserInfo) {
     const user = await getUser(newUserInfo.name);
 
     //同じ名前のユーザーがいるかの確認
-    if(user.length !== 0){
+    if (user.length !== 0) {
         return 0;
     }
     //パスと確認用のパスが一致しているかの確認
-    if(newUserInfo.pw1 !== newUserInfo.pw2){
+    if (newUserInfo.pw1 !== newUserInfo.pw2) {
         return 1;
     }
 
@@ -121,26 +130,12 @@ async function addNewUser(newUserInfo) {
     const hashedPw = bcrypt.hashSync(newUserInfo.pw1, 5);
 
     //userターブルに新規ユーザー追加
-    const id = String(Math.floor(Math.random() * 10000000));
+    //const id = String(Math.floor(Math.random() * 10000000));
     const para = {
-        text: "insert into users (user_name,user_pw,user_id,status) values ($1,$2,$3,'user')",
-        values: [newUserInfo.name, hashedPw, id]
+        text: "insert into users (user_name,user_pw,user_role) values ($1,$2,0)",
+        values: [newUserInfo.name, hashedPw]
     }
-    await postgresDB.getData(para);
-
-    //スコアテーブルに新規ユーザー追加
-    const para2 = {
-        text: "insert into score (user_name, score, taken_time, status, category, start_time, end_time) values ($1,null,null,'NA',$2,null,null)",
-        values: [newUserInfo.name, 'japana']
-    }
-    await postgresDB.getData(para2);
-
-    const para3 = {
-        text: "insert into score (user_name, score, taken_time, status, category, start_time, end_time) values ($1,null,null,'NA',$2,null,null)",
-        values: [newUserInfo.name, 'categoryb']
-    }
-    await postgresDB.getData(para3);
-
+    return postgresDB.getData(para);
 }
 
 async function loginUser(loginUserInfo) {
@@ -156,10 +151,10 @@ async function loginUser(loginUserInfo) {
 
     //パスワードが一致すればユーザーデータを返す
     if (result) {
-        if (data[0].status == 'admin') {
+        if (data[0].user_role === 1) {
             return 2;
         }
-        return loginUserInfo.name;
+        return data;
     }
 
     return 1;
@@ -170,6 +165,19 @@ function getAllUsers() {
     return postgresDB.getData(para);
 }
 
+function getAllCategory() {
+    const para = "select * from categories";
+    return postgresDB.getData(para);
+}
+
+function getAnsweredQuiz(uuid){
+    const para = {
+        text: `select category_id from scores where user_id = $1`,
+        values: [uuid]
+    }
+    return postgresDB.getData(para);
+}
+
 function deleteQuestion(tablename, id) {
     /*
     const para = {
@@ -177,7 +185,7 @@ function deleteQuestion(tablename, id) {
         values: [id]
     }
     return postgresDB.getData(para);
-    */ 
+    */
     const para = {
         text: `delete from $1 where id = $2`,
         values: [tablename, id]
@@ -185,20 +193,14 @@ function deleteQuestion(tablename, id) {
     return postgresDB.getData(para);
 }
 
-async function deleteUser(tablename, name) {
+async function deleteUser(id) {
     //ユーザーテーブルにあるユーザーのデータを削除
     const para = {
-        text: `delete from $1 where user_name = $2`,
-        values: [tablename, name]
+        text: `delete from users where id = $1`,
+        values: [id]
     }
-    await postgresDB.getData(para);
+    return postgresDB.getData(para);
 
-    //スコアテーブルにあるユーザーのデータを削除
-    const para2 = {
-        text: `delete from score where user_name = $1`,
-        values: [name]
-    }
-    await postgresDB.getData(para2);
 }
 
 function selectedQuiz(tablename, id) {
@@ -225,12 +227,12 @@ function updatedUser(userinfo, username) {
     return postgresDB.getData(updPara);
 }
 module.exports = {
-    updateStartTime,
     checkAnswer,
     checkUserCategoryScore,
-    addQuestion,
+    addQuestionByCategory,
     showQuestiontable,
     addNewUser,
+    addNewCategory,
     loginUser,
     deleteQuestion,
     deleteUser,
@@ -239,5 +241,9 @@ module.exports = {
     selectedQuiz,
     getUser,
     getAllUsers,
-    getUserScore
+    getAllCategory,
+    getAnsweredQuiz,
+    getUserScore,
+    createUserIntoScores,
+    showSelectedQuiz
 }

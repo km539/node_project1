@@ -14,26 +14,29 @@
     <nav>
         <h1><a href="/">Multiple Choice Quiz</a></h1>
         <ul>
-            <li><a href="<%=`/userinfo/${username}`%>"><i class="fas fa-user"></i> ユーザー情報</a></li>
+            <li><a href="<%=`/user/info/${user.id}`%>"><i class="fas fa-user"></i> ユーザー情報</a></li>
             <li class="quizTable"><i class="fas fa-question-circle"></i> クイズ問題
                 <ul class="dropdownMenu">
-                    <li><a href="/quiz/japana">日本</a></li>
-                    <li><a href="/quiz/categoryb">都道府県</a></li>
+                    <% category.forEach(function(cat) { %>
+                    <li><a href="<%=`/quiz/${cat.id}`%>"><%= cat.category_name %></a></li>
+                    <% }); %>
                 </ul>
             </li>
         </ul>
     </nav>
     <div class="title">
         <h1 id="topicTitle">トピックを選択する</h1>
-        <button id="japana" class="btn">日本</button>
-        <button id="categoryb" class="btn">都道府県</button>
+        <!-- カテゴリーの数だけ、ボタンを作成-->
+        <% category.forEach(function(cat) { %>
+        <button name="<%=`${cat.id}`%>" value="<%=`${user.id}`%>" class="categoryBtn"><%= cat.category_name %></button>
+        <% }); %>
+
         <button id="nextQuiz" class="btn">NEXT QUIZ</button>
     </div>
 
     <div class="circle"></div>
     <div class="displayTime"></div>
 
-    <!-- action="/review" method="post"-->
     <form id="form" action="/review" method="post" name="reviewForm">
 
         <!-- 四択形式問題を表示-->
@@ -42,8 +45,8 @@
                 <h2 id="question"></h2>
             </div>
         </div>
-        <input type="hidden" id="selectedChoices" name="selectedChoices" value="test">
-        <input type="hidden" id="username" name="username" value="<%=`${username}`%>">
+        <input type="hidden" id="selectedChoices" name="selectedChoices" value="">
+        <input type="hidden" id="username" name="username" value="<%=`${user.id}`%>">
         <input type="hidden" id="category" name="category" value="">
         <button id="submitBtn" type="submit" class="btn">SUBMIT</button>
     </form>

@@ -15,8 +15,9 @@
         <ul>
             <li class="quizTable"><i class="fas fa-question-circle"></i> クイズ問題
                 <ul class="dropdownMenu">
-                    <li><a href="/quiz/japana">日本</a></li>
-                    <li><a href="/quiz/categoryb">都道府県</a></li>
+                    <% category.forEach(function(cat) { %>
+                        <li><a href="<%=`/quiz/${cat.id}`%>"><%= cat.category_name %></a></li>
+                    <% }); %>
                 </ul>
             </li>
         </ul>
@@ -34,13 +35,17 @@
             </tr>
             <% users.forEach(function(user) { %>
             <tr>
-                <th><%= user.user_id %></th>
+                <th><%= user.id %></th>
                 <th ><%= user.user_name %></th>
                 <th><%= user.user_pw %></th>
-                <th><%= user.status %></th>
+                <% if(user.role === 1){ %>
+                    <th>Admin</th>
+                  <% } else{ %>  
+                    <th>User</th>
+                 <% } %>
                 <th class="action">
-                    <a href="<%=`/admin/update/users/${user.user_name}`%>" class="btnAction">更新</a>
-                    <a href="<%=`/admin/delete/users/${user.user_name}`%>" class="btnAction">削除</a>
+                    <a href="<%=`/admin/update/${user.id}`%>" class="btnAction">更新</a>
+                    <a href="<%=`/admin/delete/${user.id}`%>" class="btnAction">削除</a>
                 </th>
             </tr>
             <% }); %>
@@ -49,20 +54,38 @@
 
     <div class="postQuestion" id="postQuestion">
         <h1>質問を追加する</h1>
-        <form action="/admin" class="postQuestionForm" method="post">
+        <form action="/admin/add" class="postQuestionForm" method="post">
 
             <!-- for attribute of label tag shouldbe equal to id of input tag to bind them together-->
             <select id="topic" name="topic" class="qusestionSelect" required>
                 <option value="" disabled selected >トピック</option>
-                <option value="japana">日本</option>
-                <option value="categoryb">都道府県</option>
+                <% category.forEach(function(cat) { %>
+                    <option value="<%=`${cat.id}`%>"><%= cat.category_name %></option>
+                <% }); %>
             </select>
             <input type="text" name="question" class="qusestionElement" placeholder="質問内容" required>
             <input type="text" name="choice1" class="qusestionElement" placeholder="選択肢１" required>
             <input type="text" name="choice2" class="qusestionElement" placeholder="選択肢２" required>
             <input type="text" name="choice3" class="qusestionElement" placeholder="選択肢３">
             <input type="text" name="choice4" class="qusestionElement" placeholder="選択肢４">
-            <input type="text" name="answer" class="qusestionElement" placeholder="質問の答え" required>
+            <select id="answer" name="answer" class="qusestionSelect" required>
+                <option value="" disabled selected >質問の答え</option>
+                <option value="0">1</option>
+                <option value="1">2</option>
+                <option value="2">3</option>
+                <option value="3">4</option>
+            </select>
+            <button type="submit" class="questionBtn">追加する</button>
+        </form>
+    </div>
+
+    
+    <div class="postQuestion" id="postQuestion">
+        <h1>カテゴリーを追加する</h1>
+        <form action="/admin/addCategory" class="postQuestionForm" method="post">
+
+            <input type="text" name="newCategory" class="qusestionElement" placeholder="新しいカテゴリー" required>
+            
             <button type="submit" class="questionBtn">追加する</button>
         </form>
     </div>
