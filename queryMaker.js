@@ -11,7 +11,7 @@ function createUserIntoScores(uuid, category_id) {
 }
 
 function showSelectedQuiz(category_id) {
-    const para = `select id, question, choice, answer from questions where category_id = ${category_id} ORDER BY random()`;
+    const para = `select id, question, choice, answer from questions where category_id = ${category_id} ORDER BY random() limit 10`;
     return postgresDB.getData(para);
 }
 
@@ -178,29 +178,19 @@ function getAnsweredQuiz(uuid){
     return postgresDB.getData(para);
 }
 
-function deleteQuestion(tablename, id) {
-    /*
-    const para = {
-        text: `delete from ${tablename} where id = $1`,
+async function deleteUser(id) {
+    const para2 = {
+        text: `delete from scores where user_id = $1`,
         values: [id]
     }
-    return postgresDB.getData(para);
-    */
-    const para = {
-        text: `delete from $1 where id = $2`,
-        values: [tablename, id]
-    }
-    return postgresDB.getData(para);
-}
+    await postgresDB.getData(para2);
 
-async function deleteUser(id) {
     //ユーザーテーブルにあるユーザーのデータを削除
     const para = {
         text: `delete from users where id = $1`,
         values: [id]
     }
-    return postgresDB.getData(para);
-
+    return await postgresDB.getData(para);
 }
 
 function selectedQuiz(tablename, id) {
@@ -209,14 +199,6 @@ function selectedQuiz(tablename, id) {
         values: [tablename, id]
     }
     return postgresDB.getData(para);
-}
-
-function updatedQuiz(updatedQuiz, tablename, id) {
-    const updPara = {
-        text: `update $1 set question=$2, choice1=$3, choice2=$4, choice3=$5, choice4=$6, answer=$7 where id = $8`,
-        values: [tablename, updatedQuiz.qContent, updatedQuiz.qChoice1, updatedQuiz.qChoice2, updatedQuiz.qChoice3, updatedQuiz.qChoice4, updatedQuiz.qAnswer, id]
-    }
-    return postgresDB.getData(updPara);
 }
 
 function updatedUser(userinfo, username) {
@@ -234,9 +216,7 @@ module.exports = {
     addNewUser,
     addNewCategory,
     loginUser,
-    deleteQuestion,
     deleteUser,
-    updatedQuiz,
     updatedUser,
     selectedQuiz,
     getUser,

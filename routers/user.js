@@ -33,7 +33,7 @@ router.post("/login", async (req, res) => {
     }
     if (data === 1) {
         return res.render('login', {
-            error: '名前またはパスワードが正しくありません。',
+            error: 'パスワードが正しくありません。',
         });
     }
     

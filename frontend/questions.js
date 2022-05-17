@@ -1,11 +1,11 @@
-const topicTitle = document.getElementById('topicTitle');
+import {postData, showfirstQuestion} from './components/startQuiz.js';
+import {showNextQuiz} from './components/nextQuiz.js';
+
 const btnNextQuiz = document.getElementById('nextQuiz');
 const errorMessage = document.querySelector('.error');
 const btns = document.querySelectorAll('.categoryBtn');
-let quizByCatgory = []
-const qs = document.getElementById("question");
-let quizForm = document.getElementById("questions");
-let turn = 1;
+let quizByCatgory = [] //クイズの問題を確保
+let turn = 1; //クイズの番号
 
 
 //カテゴリーボタンがクリックされる処理
@@ -19,113 +19,43 @@ for (let i = 0; i < btns.length; i++) {
             const quiz = await postData(element.value, element.name);
             //console.log(quiz);
             quizByCatgory = quiz;
+            //カテゴリボタンを非表示にする。
+            for (let j = 0; j < btns.length; j++){
+                btns[j].style.display = "none";
+            }
             const firstQs = showfirstQuestion(quiz);
             turn++;
-            element.style.display = "none";
             document.querySelector("#category").setAttribute("value", element.name);
             initialClock();
         }
 
     });
-    //element.style.display = "none";
-}
-
-
-async function postData(uuid, category_id) {
-    try {
-        const res = await fetch('/admin/update/scores', {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify([{
-                uuid: uuid,
-                category_id: category_id
-            }])
-        });
-
-        const data = await res.json();
-        return data;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-//問題を見せる
-function showfirstQuestion(quiz) {
-
-    const qsNum = 'Q1';
-    const choice = quiz[0].choice;
-    qs.innerHTML = qsNum + "  " + quiz[0].question;
-    for (let i = 0; i < choice.length; i++) {
-
-        //create div contains radio input.
-        const element = choice[i];
-        let div = document.createElement("DIV");
-        div.setAttribute("id", "radioBox");
-
-        let input = document.createElement("INPUT");
-        input.setAttribute("type", "radio");
-        input.setAttribute("name", qsNum);
-        input.setAttribute("value", `${i}`);
-        input.setAttribute("label", element);
-        input.setAttribute("class", `${i}`);
-
-        div.appendChild(input);
-        quizForm.appendChild(div);
-        btnNextQuiz.style.display = "block";
-    }
-    return;
 }
 
 //ネクストボタンがクリックされたら…
 btnNextQuiz.addEventListener('click', async (e) => {
     e.preventDefault();
     stopClock(); //前のタイマーをストップ
-    showNextQuiz(); //次の問題を反映させる処理
+    showNextQuiz(quizByCatgory, turn ); //次の問題を反映させる処理
+    turn++;
     initialClock(); //
 });
 
-function showNextQuiz() {
-    //チェックされた要素を取得して、その結果を保持する。
-    var checkedchoice = document.querySelector("#radioBox input:checked");
-    if (checkedchoice != null) {
-        checkedchoice.checked = false;
-    }
 
-    const qsNum = `Q${turn}`;
-    const choice = quizByCatgory[turn - 1].choice;
-    qs.innerHTML = qsNum + "  " + quizByCatgory[turn - 1].question;
-
-    const div = document.querySelectorAll('#radioBox');
-    //console.log(div);
-    for (let i = 0; i < choice.length; i++) {
-        const input = div[i].firstElementChild;
-        input.setAttribute("name", qsNum);
-        input.setAttribute("value", `${i}`);
-        input.setAttribute("label", choice[i]);
-    }
-
-    if (turn === quizByCatgory.length) {
-        document.getElementById('nextQuiz').style.display = "none";
-        document.getElementById('submitBtn').style.display = "block";
-    }
-    turn++;
-    return;
-}
 //カウントダウンタイマー
 const timer = document.querySelector(".displayTime");
 const circle = document.querySelector(".circle");
 var startTimer;
-
 function initialClock() {
     circle.style.visibility = 'visible';
-    let time = 30;
+    let time = 10;
     startTimer = setInterval(() => {
         timer.innerHTML = `${time}`;
         time--;
         if (time < 0) {
             stopClock();
+            saveSelectedQuestion(quizByCatgory, turn );
+            turn++;
             if (turn - 1 === quizByCatgory.length) { //クイズが最後の問題だったら
                 circle.style.visibility = 'hidden';
 
