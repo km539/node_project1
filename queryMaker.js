@@ -63,17 +63,17 @@ async function checkAnswer(user_id, category, userAnswers) {
     };
 }
 
-function addQuestionByCategory(question,choices,ansNum,category_id) {
+function addQuestionByCategory(question, choices, ansNum, category_id) {
     const para = {
         text: `insert into questions(question, choice, answer, category_id)  values ($1,$2,$3,$4)`,
-        values: [question,choices,ansNum,category_id]
+        values: [question, choices, ansNum, category_id]
     }
     return postgresDB.getData(para);
 }
 
-function addNewCategory(category){
-   const para = `insert into categories(category_name) values ('${category}')`;
-   return postgresDB.getData(para);
+function addNewCategory(category) {
+    const para = `insert into categories(category_name) values ('${category}')`;
+    return postgresDB.getData(para);
 }
 
 function showQuestiontable(category) {
@@ -101,14 +101,6 @@ function getUserScore(id) {
     const para = {
         text: `select * from scores where user_id = $1`,
         values: [id]
-    }
-    return postgresDB.getData(para);
-}
-
-function checkUserCategoryScore(username, category) {
-    const para = {
-        text: `select score from score where user_name = $1 and category = $2`,
-        values: [username, category]
     }
     return postgresDB.getData(para);
 }
@@ -170,7 +162,7 @@ function getAllCategory() {
     return postgresDB.getData(para);
 }
 
-function getAnsweredQuiz(uuid){
+function getAnsweredQuiz(uuid) {
     const para = {
         text: `select category_id from scores where user_id = $1`,
         values: [uuid]
@@ -179,46 +171,30 @@ function getAnsweredQuiz(uuid){
 }
 
 async function deleteUser(id) {
-    const para2 = {
-        text: `delete from scores where user_id = $1`,
-        values: [id]
-    }
-    await postgresDB.getData(para2);
-
     //ユーザーテーブルにあるユーザーのデータを削除
     const para = {
         text: `delete from users where id = $1`,
         values: [id]
     }
-    return await postgresDB.getData(para);
-}
-
-function selectedQuiz(tablename, id) {
-    const para = {
-        text: `select * from $1 where id = $2`,
-        values: [tablename, id]
-    }
     return postgresDB.getData(para);
 }
 
-function updatedUser(userinfo, username) {
+function updateUser(userinfo, user_id) {
     const updPara = {
-        text: `update users set user_name=$1, status=$2 where user_name = $3`,
-        values: [userinfo.username, userinfo.status, username]
+        text: `update users set user_name=$1, user_role=$2 where id = $3`,
+        values: [userinfo.username, userinfo.status, user_id]
     }
     return postgresDB.getData(updPara);
 }
 module.exports = {
     checkAnswer,
-    checkUserCategoryScore,
     addQuestionByCategory,
     showQuestiontable,
     addNewUser,
     addNewCategory,
     loginUser,
     deleteUser,
-    updatedUser,
-    selectedQuiz,
+    updateUser,
     getUser,
     getAllUsers,
     getAllCategory,

@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const ROOT = require("../constants");
 const event = require('../queryMaker.js');
 
 //結果画面表示
@@ -46,7 +45,6 @@ router.post("/login", async (req, res) => {
 
 //アカウント登録画面
 router.get("/signUp", (req, res) => {
-    //res.sendFile("/frontend/signUp.html", {root: ROOT})
     return res.render('signUp', {
         error: '',
     });
@@ -95,12 +93,17 @@ router.get("/quiz/:category", async (req, res) => {
     });
 })
 
+//ユーザー画面へ
 router.get("/user/:uuid", async (req, res) => {
     const uuid = req.params.uuid;
     const user = await event.getUser(uuid);
     const category = await event.getAllCategory();
     const answered = await event.getAnsweredQuiz(uuid);
     
+    /*
+    console.log(category);
+    console.log(answered);
+    */
     //回答していないクイズのみ選択
     for (let i = 0; i < category.length; i++) {
         for (let j = 0; j < answered.length; j++) {
@@ -113,14 +116,6 @@ router.get("/user/:uuid", async (req, res) => {
         user: user[0],
         category: category
     });
-});
-
-router.get("/check/:username/:category", async (req, res) => {
-    const username = req.params.username;
-    const category = req.params.category;
-
-    const data = await event.checkUserCategoryScore(username, category);
-    res.send(data[0]);
 });
 
 module.exports = router;

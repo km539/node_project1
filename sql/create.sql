@@ -1,9 +1,9 @@
 
-/*drop table if exists categories cascade;
+/*
+drop table if exists categories cascade;
 drop table if exists questions cascade;
 drop table if exists users cascade;
 drop table if exists scores;
-*/
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
@@ -20,7 +20,7 @@ create table if not exists questions(
     answer int not null,
     category_id int not null,
     primary key(id),
-    foreign key(category_id) references categories(id)
+    foreign key(category_id) references categories(id) on delete cascade
 );
 
 create table if not exists users(
@@ -41,11 +41,10 @@ create table if not exists scores(
     user_id uuid not null,
     category_id int not null,
     primary key(id),
-    foreign key(category_id) references categories(id),
-    foreign key(user_id) references users(id)
+    foreign key(category_id) references categories(id) on delete cascade,
+    foreign key(user_id) references users(id) on delete cascade
 );
 
-/*
 insert into categories(category_name) values ('動物'),('雑学'),('日本');
 
 insert into questions(question, choice, answer, category_id) 
@@ -62,7 +61,9 @@ insert into questions(question, choice, answer, category_id)
         ('日本の総人口',array ['1億人','8000万人','1億2000万人','1億5000万人'],2,3),
         ('日本の元号は',array ['昭和','平成','令和','明治'],2,3),
         ('日本の100代目総理大臣',array ['麻生太郎','岸田文雄','菅直人','福田康夫'],1,3);
+        
 
 insert into users(user_pw,user_role,user_name)
  values('9999', 1, 'kyoji');
-*/
+
+ */

@@ -1,4 +1,4 @@
-export function showNextQuiz(quizByCatgory, turn) {
+export function showNextQuiz(quizByCategory, turn) {
     //チェックされた要素を取得して、その結果を保持する。
     var checkedchoice = document.querySelector("#radioBox input:checked");
     if (checkedchoice != null) {
@@ -6,11 +6,10 @@ export function showNextQuiz(quizByCatgory, turn) {
     }
 
     const qsNum = `Q${turn}`;
-    const choice = quizByCatgory[turn - 1].choice;
-    document.getElementById("question").innerHTML = qsNum + "  " + quizByCatgory[turn - 1].question;
+    const choice = quizByCategory[turn - 1].choice;
+    document.getElementById("question").innerHTML = qsNum + "  " + quizByCategory[turn - 1].question;
 
     const div = document.querySelectorAll('#radioBox');
-    //console.log(div);
     for (let i = 0; i < choice.length; i++) {
         const input = div[i].firstElementChild;
         input.setAttribute("name", qsNum);
@@ -18,7 +17,7 @@ export function showNextQuiz(quizByCatgory, turn) {
         input.setAttribute("label", choice[i]);
     }
 
-    if (turn === quizByCatgory.length) {
+    if (turn === quizByCategory.length) {
         document.getElementById('nextQuiz').style.display = "none";
         document.getElementById('submitBtn').style.display = "block";
     }

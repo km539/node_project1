@@ -1,10 +1,14 @@
-import {postData, showfirstQuestion} from './components/startQuiz.js';
-import {showNextQuiz} from './components/nextQuiz.js';
+import {
+    postData,
+    showfirstQuestion
+} from './components/startQuiz.js';
+import {
+    showNextQuiz
+} from './components/nextQuiz.js';
 
 const btnNextQuiz = document.getElementById('nextQuiz');
-const errorMessage = document.querySelector('.error');
 const btns = document.querySelectorAll('.categoryBtn');
-let quizByCatgory = [] //クイズの問題を確保
+let quizByCategory = [] //クイズの問題を確保
 let turn = 1; //クイズの番号
 
 
@@ -18,9 +22,10 @@ for (let i = 0; i < btns.length; i++) {
             //クイズデータ取得
             const quiz = await postData(element.value, element.name);
             //console.log(quiz);
-            quizByCatgory = quiz;
+            quizByCategory = quiz;
+         
             //カテゴリボタンを非表示にする。
-            for (let j = 0; j < btns.length; j++){
+            for (let j = 0; j < btns.length; j++) {
                 btns[j].style.display = "none";
             }
             const firstQs = showfirstQuestion(quiz);
@@ -36,7 +41,7 @@ for (let i = 0; i < btns.length; i++) {
 btnNextQuiz.addEventListener('click', async (e) => {
     e.preventDefault();
     stopClock(); //前のタイマーをストップ
-    showNextQuiz(quizByCatgory, turn ); //次の問題を反映させる処理
+    showNextQuiz(quizByCategory, turn); //次の問題を反映させる処理
     turn++;
     initialClock(); //
 });
@@ -46,6 +51,7 @@ btnNextQuiz.addEventListener('click', async (e) => {
 const timer = document.querySelector(".displayTime");
 const circle = document.querySelector(".circle");
 var startTimer;
+
 function initialClock() {
     circle.style.visibility = 'visible';
     let time = 10;
@@ -54,16 +60,16 @@ function initialClock() {
         time--;
         if (time < 0) {
             stopClock();
-            saveSelectedQuestion(quizByCatgory, turn );
-            turn++;
-            if (turn - 1 === quizByCatgory.length) { //クイズが最後の問題だったら
+            saveSelectedQuestion();
+            if (turn - 1 === quizByCategory.length) { //クイズが最後の問題だったら
                 circle.style.visibility = 'hidden';
 
                 //ポストフォームをリクエスト
                 document.forms.reviewForm.submit();
             } else {
                 console.log("time is up");
-                showNextQuiz();
+                showNextQuiz(quizByCategory, turn);
+                turn++;
                 initialClock();
             }
         }
@@ -80,7 +86,7 @@ function stopClock() {
 const correct = 1;
 const wrong = 0;
 let answeredquestion = '';
-for (let i = 0; i < quizByCatgory.length; i++) {
+for (let i = 0; i < quizByCategory.length; i++) {
     answeredquestion += 'x';
 }
 const form = document.querySelector("#form");
@@ -91,7 +97,7 @@ function saveSelectedQuestion() {
     let result = wrong;
     let num = turn - 2;
     if (choice) {
-        result = choice.value == quizByCatgory[num].answer ? correct : wrong;
+        result = choice.value == quizByCategory[num].answer ? correct : wrong;
         num = choice.name.substring(1) - 1;
     }
 

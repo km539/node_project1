@@ -17,12 +17,6 @@ app.use(express.urlencoded({
 }));
 
 //Routes
-/*const indexHandler = (req,res,next)=>{
-    res.render('index.ejs')
-}    
-
-app.get("/", indexHandler); //
-*/
 app.use("/", userRouter); //ユーザー側の処理
 app.use("/admin", adminRouter); //サーバー側の処理
 app.use(errorHandler)
